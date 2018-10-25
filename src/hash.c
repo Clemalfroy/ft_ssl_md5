@@ -1,23 +1,5 @@
 #include "ft_ssl/hashing.h"
 
-int read_all(int fd, char **line) {
-	int		rd;
-	char	buf[4096 + 1];
-	char 	*cpy;
-
-	if (fd < 0)
-		return (0);
-	*line = ft_strnew(1);
-	while ((rd = read(fd, buf, 4096)) != 0) {
-		if (rd == ((buf[rd] = '\0') - 1))
-			return (0);
-		cpy = ft_strjoin(*line, buf);
-		free(*line);
-		*line = cpy;
-	}
-	return (1);
-}
-
 int string_hash(const char *str, t_hash *hash, t_algo func) {
 	hash->flags |= OPT_S;
 	if (!func(str, hash->flags))
@@ -34,7 +16,7 @@ int hasher(int const ac, char const **argv, t_algo func) {
 	input = NULL;
 	if ((i = hash_parse(ac, argv, &hash, func)) <= 0)
 		return (EXIT_FAILURE);
-	if (i == ac && read_all(STDIN_FILENO, &input)) {
+	if (i == ac && ft_read_all(STDIN_FILENO, &input)) {
 		string_hash(input, &hash, func);
 		free(input);
 	}
@@ -52,7 +34,7 @@ int hash_parse(int const ac, char const **argv, t_hash *hash, t_algo func)
 	g_optind = 2;
 	while ((opt = ft_getopt(ac, argv, "pqrs:")) != -1)
 		if (opt == 'p') {
-			if (!read_all(STDIN_FILENO, &input))
+			if (!ft_read_all(STDIN_FILENO, &input))
 				return (-1);
 			hash->flags & OPT_P ? string_hash("\0", hash, func)
 			: string_hash(input, hash, func);

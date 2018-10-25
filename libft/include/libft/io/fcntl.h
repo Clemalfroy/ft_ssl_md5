@@ -34,5 +34,6 @@
 
 extern ssize_t	ft_read(int fd, void *buf, size_t sz);
 extern ssize_t	ft_write(int fd, void const *buf, size_t sz);
+extern int		ft_read_all(int fd, char **line);
 
 #endif

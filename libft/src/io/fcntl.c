@@ -51,3 +51,21 @@ inline int		ft_dup2std(int *io, int *src)
 	}
 	return (YEP);
 }
+
+inline int		ft_read_all(int fd, char **line) {
+	int			rd;
+	char		buf[4096 + 1];
+	char 	*	cpy;
+
+	if (fd < 0)
+		return (0);
+	*line = ft_strnew(1);
+	while ((rd = read(fd, buf, 4096)) != 0) {
+		if (rd == ((buf[rd] = '\0') - 1))
+			return (0);
+		cpy = ft_strjoin(*line, buf);
+		free(*line);
+		*line = cpy;
+	}
+	return (1);
+}
