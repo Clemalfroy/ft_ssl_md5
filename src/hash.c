@@ -16,6 +16,14 @@ int read_stdin(char **line) {
 	return (1);
 }
 
+int string_hash(const char *str, t_hash *hash, t_algo func) {
+	hash->flags |= OPT_S;
+	if (!func(str, hash->flags))
+		return (0);
+	hash->flags &= OPT_S;
+	return (1);
+}
+
 int hasher(int const ac, char const **argv, t_algo func) {
 	t_hash hash;
 	i32 i;
@@ -25,7 +33,7 @@ int hasher(int const ac, char const **argv, t_algo func) {
 	if ((i = hash_parse(ac, argv, &hash, func)) <= 0)
 		return (EXIT_FAILURE);
 	if (i == ac && read_stdin(&input)) {
-		func(input, hash.flags);
+		string_hash(input, &hash, func);
 		free(input);
 	}
 	while (i++ < ac - 1)
@@ -44,12 +52,13 @@ int hash_parse(int const ac, char const **argv, t_hash *hash, t_algo func)
 		if (opt == 'p') {
 			if (!read_stdin(&input))
 				return (-1);
-			hash->flags & OPT_P ? func("", hash->flags) : func(input, hash->flags);
+			hash->flags & OPT_P ? string_hash("\0", hash, func)
+			: string_hash(input, hash, func);
 			hash->flags |= OPT_P;
 			free(input);
 		}
-		else if (opt == 's' && (hash->flags |= OPT_S))
-			func(g_optarg, hash->flags);
+		else if (opt == 's')
+			string_hash(g_optarg, hash, func);
 		else if (opt == 'q')
             hash->flags |= OPT_Q;
         else if (opt == 'r')
@@ -58,5 +67,4 @@ int hash_parse(int const ac, char const **argv, t_hash *hash, t_algo func)
 			return (-1);
 	return (g_optind); 
 }
-
 
