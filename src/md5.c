@@ -2,10 +2,6 @@
 #include "ft_ssl/hashing/md5.h"
 
 int md5(const char *str, short opt) {
-	(void)str;
-	(void)opt;
-
-	ft_putf(1, "%s", str);
-
+	display_hash("MD5", "as5d56sa4d", str, opt);
 	return (EXIT_SUCCESS);
 }
