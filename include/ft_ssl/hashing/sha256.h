@@ -3,6 +3,7 @@
 
 #include <libft.h>
 
-int sha256(const char *str, short opt);
+int     sha256(const char *str, short opt);
+char    *sha256_algo(char *str);
 
 #endif

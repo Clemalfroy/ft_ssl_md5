@@ -3,6 +3,7 @@
 
 #include <libft.h>
 
-int md5(const char *str, short opt);
+int     md5(const char *str, short opt);
+char    *md5_algo(char *str);
 
 #endif

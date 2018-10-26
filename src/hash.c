@@ -69,5 +69,19 @@ void	display_hash(char const *hash, char *value, char const *word, short flags) 
 	else 
 		flags & OPT_S ? ft_putf(1, "%s (\"%s\") = %s\n", hash, word, value)
 		: ft_putf(1, "%s (%s) = %s\n", hash, word, value);
-	//free(value);
+	free(value);
+}
+
+char	*hash_file(const char *str, t_hashalgo func) {
+	char *content;
+	int fd;
+
+	if ((fd = open(str, O_RDONLY)) < 0) {
+		ft_putf(STDERR_FILENO, "%s: %e\n", str, errno);
+		return (NULL);
+	}
+	content = NULL;
+	if (!ft_read_all(fd, &content))
+		return (NULL);
+	return (func(content));
 }
