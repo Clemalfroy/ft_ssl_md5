@@ -1,7 +1,6 @@
 #include "ft_ssl/hashing.h"
 
 int		string_hash(const char *str, t_hash *hash, t_algo func) {
-	hash->flags |= OPT_DONE;
 	hash->flags |= OPT_S;
 	if (!func(str, hash->flags))
 		return (0);
@@ -20,6 +19,7 @@ int		hasher(int const ac, char const **argv, t_algo func) {
 		return (EXIT_FAILURE);
 	if (i == ac && (ac <= 2 || (hash.flags & OPT_Q && !(hash.flags & OPT_DONE)))) {
 		ft_read_all(STDIN_FILENO, &input);
+		hash.flags |= OPT_DONE;
 		hash.flags |= OPT_Q;
 		string_hash(input, &hash, func);
 		free(input);
@@ -46,7 +46,7 @@ int		hash_parse(int const ac, char const **argv, t_hash *hash, t_algo func)
 			hash->flags &= ~OPT_P;
 			free(input);
 		}
-		else if (opt == 's')
+		else if (opt == 's' && (hash->flags |= OPT_DONE))
 			string_hash(g_optarg, hash, func);
 		else if (opt == 'q')
             hash->flags |= OPT_Q;
