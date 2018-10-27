@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   libft/str.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmalfro <cmalfro@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cmalfroy <cmalfroy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/07 09:52:30 by cmalfro           #+#    #+#             */
-/*   Updated: 2017/12/10 10:18:52 by cmalfro          ###   ########.fr       */
+/*   Created: 2017/11/07 09:52:30 by cmalfroy          #+#    #+#             */
+/*   Updated: 2017/12/10 10:18:52 by cmalfroy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,6 +60,6 @@ extern size_t	ft_strspn(const char *s, const char *accept);
 extern size_t	ft_strcspn(const char *s, const char *reject);
 extern char		*ft_strjoin(char const *s1, char const *s2);
 extern int		ft_stris(const char *s1, int (*cb)(int c));
-extern char     *ft_strnew(size_t size);
+extern char		*ft_strnew(size_t size);
 
 #endif

@@ -3,9 +3,9 @@
 /*                                                        :::      ::::::::   */
 /*   ft_fcntl.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmalfro <cmalfro@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cmalfroy <cmalfroy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/07 09:52:33 by cmalfro           #+#    #+#             */
+/*   Created: 2017/11/07 09:52:33 by cmalfroy          #+#    #+#             */
 /*   Updated: 2017/11/17 09:51:01 by null             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -52,15 +52,17 @@ inline int		ft_dup2std(int *io, int *src)
 	return (YEP);
 }
 
-inline int		ft_read_all(int fd, char **line) {
+inline int		ft_read_all(int fd, char **line)
+{
 	int			rd;
 	char		buf[4096 + 1];
-	char 	*	cpy;
+	char		*cpy;
 
 	if (fd < 0)
 		return (0);
 	*line = ft_strnew(1);
-	while ((rd = read(fd, buf, 4096)) != 0) {
+	while ((rd = read(fd, buf, 4096)) != 0)
+	{
 		if (rd == ((buf[rd] = '\0') - 1))
 			return (0);
 		cpy = ft_strjoin(*line, buf);

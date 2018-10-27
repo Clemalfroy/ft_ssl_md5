@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ush/env.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmalfro <cmalfro@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cmalfroy <cmalfroy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 09:52:30 by cmalfroy          #+#    #+#             */
-/*   Updated: 2017/12/06 12:00:10 by cmalfro          ###   ########.fr       */
+/*   Updated: 2017/12/06 12:00:10 by cmalfroy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,11 @@
 # include "str.h"
 # include "io.h"
 
-extern int		    g_optind;
-extern const char   *g_optarg;
-extern int		    g_opterr;
-extern int		    g_optopt;
+extern int			g_optind;
+extern const char	*g_optarg;
+extern int			g_opterr;
+extern int			g_optopt;
 
-int				    ft_getopt(int ac, char const **av, const char *fmt);
+int					ft_getopt(int ac, char const **av, const char *fmt);
 
 #endif

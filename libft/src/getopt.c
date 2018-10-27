@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ush/env.h                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cmalfro <cmalfro@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cmalfroy <cmalfroy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 09:52:30 by cmalfroy          #+#    #+#             */
-/*   Updated: 2017/12/06 12:00:10 by cmalfro          ###   ########.fr       */
+/*   Updated: 2017/12/06 12:00:10 by cmalfroy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,8 @@ int					g_opterr = 1;
 static int			g_optreset = 0;
 static const char	*g_place = EMSG;
 
-static inline int	getopt2(char const *s, int ac, char const **av, char const *fmt)
+static inline int	getopt2(char const *s, int ac, char const **av,
+	char const *fmt)
 {
 	if (g_optopt == ':' || (s = ft_strchr(fmt, g_optopt)) == NULL)
 	{

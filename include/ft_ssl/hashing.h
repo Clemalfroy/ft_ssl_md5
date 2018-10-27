@@ -1,7 +1,21 @@
-#ifndef HASING_H
-# define HASING_H
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_ssl.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: cmalfroy <cmalfroy@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2017/11/07 09:52:30 by cmalfroy          #+#    #+#             */
+/*   Updated: 2017/12/06 12:00:10 by cmalfroy         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include <libft.h>
+#ifndef HASHING_H
+# define HASHING_H
+
+# include <libft.h>
+# include "hashing/md5.h"
+# include "hashing/sha256.h"
 
 enum			e_opt
 {
@@ -14,20 +28,18 @@ enum			e_opt
 };
 
 typedef struct	s_hash{
-	uint8_t 	flags;
+	uint8_t		flags;
 }				t_hash;
 
-typedef int (*t_algo)(const char *, short);
+typedef int	(*t_algo)(const char *, short);
 
-typedef char *(*t_hashalgo)(const char *);
+typedef char*(*t_hashalgo)(const char *);
 
-int 	hash_parse(int const ac, char const **argv, t_hash *hash, t_algo func);
-int 	hasher(int const ac, char const **argv, t_algo func);
-void	display_hash(char const *hash, char *value, char const *word, short flags);
-char	*hash_file(const char *str, t_hashalgo func);
-
-
-#include "hashing/md5.h"
-#include "hashing/sha256.h"
+int				hash_parse(int const ac, char const **argv, t_hash *hash,
+					t_algo func);
+int				hasher(int const ac, char const **argv, t_algo func);
+void			display_hash(char const *hash, char *value, char const *word,
+					short flags);
+char			*hash_file(const char *str, t_hashalgo func);
 
 #endif

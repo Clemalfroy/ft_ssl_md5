@@ -28,7 +28,6 @@ SRC_PATH = src
 
 SRC_NAME = \
 	md5.c ft_ssl.c sha256.c hash.c
-
 AR = ar rc
 
 INC_LIB = -I libft/include
