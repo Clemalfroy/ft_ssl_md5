@@ -14,12 +14,12 @@ enum			e_opt
 };
 
 typedef struct	s_hash{
-	u8 			flags;
+	uint8_t 	flags;
 }				t_hash;
 
 typedef int (*t_algo)(const char *, short);
 
-typedef char *(*t_hashalgo)(char *);
+typedef char *(*t_hashalgo)(const char *);
 
 int 	hash_parse(int const ac, char const **argv, t_hash *hash, t_algo func);
 int 	hasher(int const ac, char const **argv, t_algo func);

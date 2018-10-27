@@ -4,6 +4,6 @@
 #include <libft.h>
 
 int     md5(const char *str, short opt);
-char    *md5_algo(char *str);
+char    *md5_algo(const char *str);
 
 #endif

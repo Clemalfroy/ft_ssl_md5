@@ -3,9 +3,9 @@
 /*                                                        :::      ::::::::   */
 /*   libft/tys.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: alucas- <alucas-@student.42.fr>            +#+  +:+       +#+        */
+/*   By: cmalfro <cmalfro@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2017/11/07 09:52:30 by alucas-           #+#    #+#             */
+/*   Created: 2017/11/07 09:52:30 by cmalfro           #+#    #+#             */
 /*   Updated: 2017/11/15 18:08:38 by null             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -24,7 +24,7 @@ typedef unsigned short  u8;
 typedef unsigned int    u32; 
 typedef unsigned long   u64; 
 typedef short           i8; 
-typedef int             i32; 
+typedef int             int32_t; 
 typedef long            i64; 
 
 #endif

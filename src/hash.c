@@ -10,7 +10,7 @@ int		string_hash(const char *str, t_hash *hash, t_algo func) {
 
 int		hasher(int const ac, char const **argv, t_algo func) {
 	t_hash hash;
-	i32 i;
+	int32_t i;
 	char *input;
 
 	input = NULL;
@@ -74,6 +74,7 @@ void	display_hash(char const *hash, char *value, char const *word, short flags) 
 
 char	*hash_file(const char *str, t_hashalgo func) {
 	char *content;
+	char *digest;
 	int fd;
 
 	if ((fd = open(str, O_RDONLY)) < 0) {
@@ -83,5 +84,7 @@ char	*hash_file(const char *str, t_hashalgo func) {
 	content = NULL;
 	if (!ft_read_all(fd, &content))
 		return (NULL);
-	return (func(content));
+	digest = func(content);
+	free(content);
+	return (digest);
 }
