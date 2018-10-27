@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ssl.c                                           :+:      :+:    :+:   */
+/*   endianness.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cmalfroy <cmalfroy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,11 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MD5_H
-# define MD5_H
+#include "libft/bytes.h"
 
-# include <libft.h>
+int32_t	ft_get_endianness(void)
+{
+	short	tester;
 
-int		md5(const char *str, short opt);
-
-#endif
+	tester = 0x0001;
+	return (*(char*)&tester == 0x01);
+}

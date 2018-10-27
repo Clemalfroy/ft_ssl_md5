@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ssl.c                                           :+:      :+:    :+:   */
+/*   endianness.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cmalfroy <cmalfroy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,11 +10,9 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MD5_H
-# define MD5_H
+#include "libft/bytes.h"
 
-# include <libft.h>
-
-int		md5(const char *str, short opt);
-
-#endif
+uint32_t  left_rotate_32(uint32_t word, uint32_t delta)
+{
+	return ((word << delta) | (word >> ((sizeof(int32_t) * 8) - delta)));
+}

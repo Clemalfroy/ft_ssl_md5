@@ -25,15 +25,18 @@
 // 0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,
 // 0xc67178f2 };
 
-char	*sha256_algo(const char *str)
+uint32_t	*sha256_algo(const char *str)
 {
+	uint32_t *digest;
+
+	digest = NULL;
 	(void)str;
-	return ("achanger");
+	return digest;
 }
 
 int		sha256(const char *str, short opt)
 {
-	char *hash;
+	uint32_t *hash;
 
 	if (!(opt & OPT_S))
 	{

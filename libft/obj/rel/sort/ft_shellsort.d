@@ -7,7 +7,8 @@ obj/rel/sort/ft_shellsort.o: src/sort/ft_shellsort.c include/libft.h \
   include/libft/ds/sds.h include/libft/ds/set.h include/libft/ds/vec.h \
   include/libft/fs.h include/libft/io.h include/libft/int.h \
   include/libft/io/fcntl.h include/libft/io/ifs.h include/libft/io/ofs.h \
-  include/libft/ft_glob.h include/libft/sort.h include/libft/getopt.h
+  include/libft/ft_glob.h include/libft/sort.h include/libft/getopt.h \
+  include/libft/bytes.h
 
 include/libft.h:
 
@@ -62,3 +63,5 @@ include/libft/ft_glob.h:
 include/libft/sort.h:
 
 include/libft/getopt.h:
+
+include/libft/bytes.h:

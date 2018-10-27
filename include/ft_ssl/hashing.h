@@ -33,13 +33,13 @@ typedef struct	s_hash{
 
 typedef int	(*t_algo)(const char *, short);
 
-typedef char*(*t_hashalgo)(const char *);
+typedef uint32_t*(*t_hashalgo)(const char *);
 
 int				hash_parse(int const ac, char const **argv, t_hash *hash,
 					t_algo func);
 int				hasher(int const ac, char const **argv, t_algo func);
-void			display_hash(char const *hash, char *value, char const *word,
+void			display_hash(char const *hash, uint32_t *digest, char const *word,
 					short flags);
-char			*hash_file(const char *str, t_hashalgo func);
+uint32_t		*hash_file(const char *str, t_hashalgo func);
 
 #endif

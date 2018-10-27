@@ -29,5 +29,6 @@
 # include "libft/tys.h"
 # include "libft/sort.h"
 # include "libft/getopt.h"
+# include "libft/bytes.h"
 
 #endif

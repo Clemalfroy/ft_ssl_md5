@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_ssl.c                                           :+:      :+:    :+:   */
+/*   endianness.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cmalfroy <cmalfroy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -10,11 +10,16 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MD5_H
-# define MD5_H
+#include "libft/bytes.h"
 
-# include <libft.h>
-
-int		md5(const char *str, short opt);
-
-#endif
+uint64_t    swap_int64(const uint64_t data)
+{
+	return ((((data & 0xff00000000000000ULL) >> 56) |
+			((data & 0x00ff000000000000ULL) >> 40) |
+			((data & 0x0000ff0000000000ULL) >> 24) |
+			((data & 0x000000ff00000000ULL) >>  8) |
+			((data & 0x00000000ff000000ULL) <<  8) |
+			((data & 0x0000000000ff0000ULL) << 24) |
+			((data & 0x000000000000ff00ULL) << 40) |
+			((data & 0x00000000000000ffULL) << 56)));
+}

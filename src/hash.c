@@ -11,8 +11,9 @@
 /* ************************************************************************** */
 
 #include "ft_ssl/hashing.h"
+#include <stdio.h>
 
-int		string_hash(const char *str, t_hash *hash, t_algo func)
+int			string_hash(const char *str, t_hash *hash, t_algo func)
 {
 	hash->flags |= OPT_S;
 	if (!func(str, hash->flags))
@@ -21,7 +22,7 @@ int		string_hash(const char *str, t_hash *hash, t_algo func)
 	return (1);
 }
 
-int		hasher(int const ac, char const **argv, t_algo func)
+int			hasher(int const ac, char const **argv, t_algo func)
 {
 	t_hash	hash;
 	int32_t	i;
@@ -46,7 +47,7 @@ int		hasher(int const ac, char const **argv, t_algo func)
 	return (EXIT_SUCCESS);
 }
 
-int		hash_parse(int const ac, char const **argv, t_hash *hash, t_algo func)
+int			hash_parse(int const ac, char const **argv, t_hash *hash, t_algo func)
 {
 	int		opt;
 	char	*input;
@@ -74,28 +75,53 @@ int		hash_parse(int const ac, char const **argv, t_hash *hash, t_algo func)
 	return (g_optind);
 }
 
-void	display_hash(char const *hash, char *value, char const *word,
+void		print_digest(uint32_t *digest, uint64_t size, int32_t swap_endian)
+{
+	uint32_t	i;
+	uint32_t	tmp;
+
+	i = 0;
+	while (i < size / 4)
+	{
+		tmp = digest[i];
+		if (swap_endian)
+			tmp = swap_int32(tmp);
+		printf("%8.8x", tmp);
+		i++;
+	}
+}
+
+void		display_hash(char const *hash, uint32_t *digest, char const *word,
 short flags)
 {
 	if (flags & OPT_P)
-		ft_strcmp("", word) == 0 ? ft_putf(1, "%s\n", value)
-		: ft_putf(1, "%s%s\n", word, value);
+	{
+		ft_strcmp("", word) == 0 ? 0 : printf( "%s", word);
+		print_digest(digest, 16, 1);
+	}
 	else if (flags & OPT_Q)
-		ft_putf(1, "%s\n", value);
+		print_digest(digest, 16, 1);
 	else if (flags & OPT_R)
-		flags & OPT_S ? ft_putf(1, "%s \"%s\" \n", value, word)
-		: ft_putf(1, "%s %s \n", value, word);
-	else
-		flags & OPT_S ? ft_putf(1, "%s (\"%s\") = %s\n", hash, word, value)
-		: ft_putf(1, "%s (%s) = %s\n", hash, word, value);
-	//free(value);
+	{
+		print_digest(digest, 16, 1);
+		flags & OPT_S ? printf( " \"%s\"", word)
+		: printf( " %s", word);
+	}
+	else 
+	{
+		flags & OPT_S ? printf( "%s (\"%s\") = ", hash, word)
+		: printf( "%s (%s) = ", hash, word);
+		print_digest(digest, 16, 1);
+	}
+	printf( "\n");
+	free(digest);
 }
 
-char	*hash_file(const char *str, t_hashalgo func)
+uint32_t	*hash_file(const char *str, t_hashalgo func)
 {
-	char	*content;
-	char	*digest;
-	int		fd;
+	char		*content;
+	uint32_t	*digest;
+	int			fd;
 
 	if ((fd = open(str, O_RDONLY)) < 0)
 	{
