@@ -58,40 +58,51 @@ static void	md5_padding(void *block_to_pad, uint8_t *message, uint32_t len)
 	((uint64_t*)block_to_pad)[7 + 8 * ((len % 64) > 64 - 9)] = printed_len;
 }
 
-static void	md5_round(uint32_t *block_states, uint32_t *block)
+static void	md5_round(uint32_t *bk_states, uint32_t *block)
 {
-	uint32_t	i;
+	int32_t		i;
 	uint32_t	tmp_f;
 	uint32_t	tmp_g;
 
-	i = 0;
-	while (i < 64)
+	i = -1;
+	while (++i < 64)
 	{
-		if (i < 16)
-		{
-			tmp_f = F(block_states[1], block_states[2], block_states[3]);
+		if (i < 16 && (tmp_f = F(bk_states[1], bk_states[2], bk_states[3])))
 			tmp_g = i;
-		}
-		else if (i < 32)
-		{
-			tmp_f = G(block_states[1], block_states[2], block_states[3]);
+		else if (i < 32
+		&& (tmp_f = G(bk_states[1], bk_states[2], bk_states[3])))
 			tmp_g = (i * 5 + 1) % 16;
-		}
-		else if (i < 48)
-		{
-			tmp_f = H(block_states[1], block_states[2], block_states[3]);
+		else if (i < 48
+		&& (tmp_f = H(bk_states[1], bk_states[2], bk_states[3])))
 			tmp_g = (i * 3 + 5) % 16;
-		}
-		else
-		{
-			tmp_f = I(block_states[1], block_states[2], block_states[3]);
+		else if (i < 64
+		&& (tmp_f = I(bk_states[1], bk_states[2], bk_states[3])))
 			tmp_g = (i * 7) % 16;
-		}
-		tmp_f += block_states[0] + g_constants[i] + block[tmp_g];
-		block_states[0] = block_states[3];
-		block_states[3] = block_states[2];
-		block_states[2] = block_states[1];
-		block_states[1] += left_rotate_32(tmp_f, g_deltas[i]);
+		tmp_f += bk_states[0] + g_constants[i] + block[tmp_g];
+		bk_states[0] = bk_states[3];
+		bk_states[3] = bk_states[2];
+		bk_states[2] = bk_states[1];
+		bk_states[1] += left_rotate_32(tmp_f, g_deltas[i]);
+	}
+}
+
+void		update_states(uint32_t *states, uint32_t *block_states,
+	uint8_t *bloc, uint32_t limit)
+{
+	uint32_t	i;
+
+	i = 0;
+	while (i < limit)
+	{
+		block_states[0] = states[0];
+		block_states[1] = states[1];
+		block_states[2] = states[2];
+		block_states[3] = states[3];
+		md5_round(block_states, (uint32_t*)(void*)(bloc + i * 64));
+		states[0] += block_states[0];
+		states[1] += block_states[1];
+		states[2] += block_states[2];
+		states[3] += block_states[3];
 		i++;
 	}
 }
@@ -100,40 +111,13 @@ static void	md5_loop(uint32_t *states, uint8_t *message,
 	uint8_t *last_block, uint32_t len)
 {
 	uint32_t	chunk_nbr;
-	uint32_t	i;
 	uint32_t	block_states[4];
 	uint64_t	extra_rounds;
 
 	chunk_nbr = len / 64;
-	i = 0;
-	while (i < chunk_nbr)
-	{
-		block_states[0] = states[0];
-		block_states[1] = states[1];
-		block_states[2] = states[2];
-		block_states[3] = states[3];
-		md5_round(block_states, (uint32_t*)(void*)(message + i * 64));
-		states[0] += block_states[0];
-		states[1] += block_states[1];
-		states[2] += block_states[2];
-		states[3] += block_states[3];
-		i++;
-	}
-	i = 0;
-	extra_rounds = 1 + !!((len % 64) > (64 - 9));
-	while (i < extra_rounds)
-	{
-		block_states[0] = states[0];
-		block_states[1] = states[1];
-		block_states[2] = states[2];
-		block_states[3] = states[3];
-		md5_round(block_states, (uint32_t*)(void*)(last_block + i * 64));
-		states[0] += block_states[0];
-		states[1] += block_states[1];
-		states[2] += block_states[2];
-		states[3] += block_states[3];
-		i++;
-	}
+	update_states(states, block_states, message, chunk_nbr);
+	extra_rounds = 1 + ((len % 64) > (64 - 9));
+	update_states(states, block_states, last_block, extra_rounds);
 }
 
 uint32_t	*md5_algo(const char *str)

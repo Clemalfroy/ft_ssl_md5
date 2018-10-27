@@ -47,7 +47,8 @@ int			hasher(int const ac, char const **argv, t_algo func)
 	return (EXIT_SUCCESS);
 }
 
-int			hash_parse(int const ac, char const **argv, t_hash *hash, t_algo func)
+int			hash_parse(int const ac, char const **argv, t_hash *hash,
+	t_algo func)
 {
 	int		opt;
 	char	*input;
@@ -75,11 +76,22 @@ int			hash_parse(int const ac, char const **argv, t_hash *hash, t_algo func)
 	return (g_optind);
 }
 
-void		print_digest(uint32_t *digest, uint64_t size, int32_t swap_endian)
+void		print_digest(uint32_t *digest, char const *hash)
 {
 	uint32_t	i;
 	uint32_t	tmp;
+	uint64_t	size;
+	int32_t		swap_endian;
 
+	if (!ft_strcmp(hash, "MD5") && (size = 16))
+		swap_endian = 1;
+	else if (!ft_strcmp(hash, "SHA256") && (size = 32))
+		swap_endian = 1;
+	else
+	{
+		size = 16;
+		swap_endian = 1;
+	}
 	i = 0;
 	while (i < size / 4)
 	{
@@ -96,24 +108,24 @@ short flags)
 {
 	if (flags & OPT_P)
 	{
-		ft_strcmp("", word) == 0 ? 0 : printf( "%s", word);
-		print_digest(digest, 16, 1);
+		ft_strcmp("", word) == 0 ? 0 : printf("%s", word);
+		print_digest(digest, hash);
 	}
 	else if (flags & OPT_Q)
-		print_digest(digest, 16, 1);
+		print_digest(digest, hash);
 	else if (flags & OPT_R)
 	{
-		print_digest(digest, 16, 1);
-		flags & OPT_S ? printf( " \"%s\"", word)
-		: printf( " %s", word);
+		print_digest(digest, hash);
+		flags & OPT_S ? printf(" \"%s\"", word)
+		: printf(" %s", word);
 	}
-	else 
+	else
 	{
-		flags & OPT_S ? printf( "%s (\"%s\") = ", hash, word)
-		: printf( "%s (%s) = ", hash, word);
-		print_digest(digest, 16, 1);
+		flags & OPT_S ? printf("%s (\"%s\") = ", hash, word)
+		: printf("%s (%s) = ", hash, word);
+		print_digest(digest, hash);
 	}
-	printf( "\n");
+	printf("\n");
 	free(digest);
 }
 
