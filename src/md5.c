@@ -123,14 +123,16 @@ uint32_t	*md5_algo(const char *str)
 	uint8_t			*message;
 	uint32_t		states[4];
 	uint32_t		*digest;
+	size_t			len;
 
+	len= ft_strlen(str);
 	message = (uint8_t*)ft_strdup(str);
 	states[A] = 0x67452301;
 	states[B] = 0xefcdab89;
 	states[C] = 0x98badcfe;
 	states[D] = 0x10325476;
-	md5_padding(last_block, message, ft_strlen(str));
-	md5_loop(states, message, last_block, ft_strlen(str));
+	md5_padding(last_block, message, len);
+	md5_loop(states, message, last_block, len);
 	if (!(digest = malloc(sizeof(states))))
 		return (NULL);
 	ft_memcpy(digest, states, sizeof(states));

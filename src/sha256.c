@@ -52,6 +52,7 @@ uint32_t	*sha256_algo(const char *str)
 	uint8_t			*message;
 	uint32_t		states[8];
 	uint32_t		*digest;
+	size_t			len;
 
 	message = (uint8_t*)ft_strdup(str);
 	states[A] = 0x6a09e667;
@@ -62,8 +63,9 @@ uint32_t	*sha256_algo(const char *str)
 	states[F] = 0x9b05688c;
 	states[G] = 0x1f83d9ab;
 	states[H] = 0x5be0cd19;
-	sha256_padding(last_block, message, ft_strlen(str));
-	//sha256_main_loop(states, message, (uint32_t*)last_block, ft_strlen(str));
+	len = ft_strlen(str);
+	sha256_padding(last_block, message, len);
+	//sha256_loop(states, message, (uint32_t*)last_block, len);
 	if (!(digest = malloc(sizeof(states))))
 		return (NULL);
 	ft_memcpy(digest, states, sizeof(states));
