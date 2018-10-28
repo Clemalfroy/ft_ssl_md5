@@ -20,7 +20,7 @@
 # define COMMAND_NOT_FOUND -1
 # define INVALID_COMMAND "Error: Command not found: %s\n"
 
-typedef int(*t_algo)(const char *, short);
+typedef int(*t_algo)(const char *, t_hash *);
 typedef int(*t_commands)(int const, char const **, t_algo);
 
 typedef struct	s_command {

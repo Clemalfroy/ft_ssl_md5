@@ -14,7 +14,10 @@
 # define SHA256_H
 
 # include <libft.h>
+# include "ft_ssl/hashing.h"
 
-int		sha256(const char *str, short opt);
+struct s_hash;
+
+int		sha256(const char *str, struct s_hash *hashopt);
 
 #endif

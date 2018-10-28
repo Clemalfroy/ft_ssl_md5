@@ -16,7 +16,7 @@
 int			string_hash(const char *str, t_hash *hash, t_algo func)
 {
 	hash->flags |= OPT_S;
-	if (!func(str, hash->flags))
+	if (!func(str, hash))
 		return (0);
 	hash->flags &= ~OPT_S;
 	return (1);
@@ -43,7 +43,7 @@ int			hasher(int const ac, char const **argv, t_algo func)
 	}
 	hash.flags &= ~OPT_S;
 	while (i++ < ac)
-		func(argv[i - 1], hash.flags);
+		func(argv[i - 1], &hash);
 	return (EXIT_SUCCESS);
 }
 
@@ -76,27 +76,16 @@ int			hash_parse(int const ac, char const **argv, t_hash *hash,
 	return (g_optind);
 }
 
-void		print_digest(uint32_t *digest, char const *hash)
+void		print_digest(uint32_t *digest, t_hash *hashopt)
 {
 	uint32_t	i;
 	uint32_t	tmp;
-	uint64_t	size;
-	int32_t		swap_endian;
 
-	if (!ft_strcmp(hash, "MD5") && (size = 16))
-		swap_endian = 1;
-	else if (!ft_strcmp(hash, "SHA256") && (size = 32))
-		swap_endian = 1;
-	else
-	{
-		size = 16;
-		swap_endian = 1;
-	}
 	i = 0;
-	while (i < size / 4)
+	while (i < hashopt->size / 4)
 	{
 		tmp = digest[i];
-		if (swap_endian)
+		if (hashopt->swap_endian)
 			tmp = swap_int32(tmp);
 		printf("%8.8x", tmp);
 		i++;
@@ -104,26 +93,26 @@ void		print_digest(uint32_t *digest, char const *hash)
 }
 
 void		display_hash(char const *hash, uint32_t *digest, char const *word,
-short flags)
+t_hash *hashopt)
 {
-	if (flags & OPT_P)
+	if (hashopt->flags & OPT_P)
 	{
 		ft_strcmp("", word) == 0 ? 0 : printf("%s", word);
-		print_digest(digest, hash);
+		print_digest(digest, hashopt);
 	}
-	else if (flags & OPT_Q)
-		print_digest(digest, hash);
-	else if (flags & OPT_R)
+	else if (hashopt->flags & OPT_Q)
+		print_digest(digest, hashopt);
+	else if (hashopt->flags & OPT_R)
 	{
-		print_digest(digest, hash);
-		flags & OPT_S ? printf(" \"%s\"", word)
+		print_digest(digest, hashopt);
+		hashopt->flags & OPT_S ? printf(" \"%s\"", word)
 		: printf(" %s", word);
 	}
 	else
 	{
-		flags & OPT_S ? printf("%s (\"%s\") = ", hash, word)
+		hashopt->flags & OPT_S ? printf("%s (\"%s\") = ", hash, word)
 		: printf("%s (%s) = ", hash, word);
-		print_digest(digest, hash);
+		print_digest(digest, hashopt);
 	}
 	printf("\n");
 	free(digest);

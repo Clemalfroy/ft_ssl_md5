@@ -10,10 +10,12 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_ssl/hashing.h"
 #include "ft_ssl/hashing/md5.h"
 
-#include <stdio.h>
+#define A 0
+#define B 1
+#define C 2
+#define D 3
 
 static uint32_t g_deltas[64] = {
 	7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
@@ -67,22 +69,22 @@ static void	md5_round(uint32_t *bk_states, uint32_t *block)
 	i = -1;
 	while (++i < 64)
 	{
-		if (i < 16 && (tmp_f = F(bk_states[1], bk_states[2], bk_states[3])))
+		if (i < 16 && (tmp_f = F(bk_states[B], bk_states[C], bk_states[D])))
 			tmp_g = i;
 		else if (i < 32
-		&& (tmp_f = G(bk_states[1], bk_states[2], bk_states[3])))
+		&& (tmp_f = G(bk_states[B], bk_states[C], bk_states[D])))
 			tmp_g = (i * 5 + 1) % 16;
 		else if (i < 48
-		&& (tmp_f = H(bk_states[1], bk_states[2], bk_states[3])))
-			tmp_g = (i * 3 + 5) % 16;
+		&& (tmp_f = H(bk_states[B], bk_states[C], bk_states[D])))
+			tmp_g = (i * D + 5) % 16;
 		else if (i < 64
-		&& (tmp_f = I(bk_states[1], bk_states[2], bk_states[3])))
+		&& (tmp_f = I(bk_states[B], bk_states[C], bk_states[D])))
 			tmp_g = (i * 7) % 16;
-		tmp_f += bk_states[0] + g_constants[i] + block[tmp_g];
-		bk_states[0] = bk_states[3];
-		bk_states[3] = bk_states[2];
-		bk_states[2] = bk_states[1];
-		bk_states[1] += left_rotate_32(tmp_f, g_deltas[i]);
+		tmp_f += bk_states[A] + g_constants[i] + block[tmp_g];
+		bk_states[A] = bk_states[D];
+		bk_states[D] = bk_states[C];
+		bk_states[C] = bk_states[B];
+		bk_states[B] += left_rotate_32(tmp_f, g_deltas[i]);
 	}
 }
 
@@ -90,20 +92,15 @@ void		update_states(uint32_t *states, uint32_t *block_states,
 	uint8_t *bloc, uint32_t limit)
 {
 	uint32_t	i;
+	uint32_t	j;
 
-	i = 0;
-	while (i < limit)
+	i = -1;
+	while (++i < limit && (j = -1))
 	{
-		block_states[0] = states[0];
-		block_states[1] = states[1];
-		block_states[2] = states[2];
-		block_states[3] = states[3];
+		ft_memcpy(block_states, states, sizeof(block_states) * 4);
 		md5_round(block_states, (uint32_t*)(void*)(bloc + i * 64));
-		states[0] += block_states[0];
-		states[1] += block_states[1];
-		states[2] += block_states[2];
-		states[3] += block_states[3];
-		i++;
+		while (++j < 4)
+			states[j] += block_states[j];
 	}
 }
 
@@ -128,33 +125,33 @@ uint32_t	*md5_algo(const char *str)
 	uint32_t		*digest;
 
 	message = (uint8_t*)ft_strdup(str);
-	states[0] = 0x67452301;
-	states[1] = 0xefcdab89;
-	states[2] = 0x98badcfe;
-	states[3] = 0x10325476;
+	states[A] = 0x67452301;
+	states[B] = 0xefcdab89;
+	states[C] = 0x98badcfe;
+	states[D] = 0x10325476;
 	md5_padding(last_block, message, ft_strlen(str));
 	md5_loop(states, message, last_block, ft_strlen(str));
-	if (!(digest = malloc(16)))
+	if (!(digest = malloc(sizeof(states))))
 		return (NULL);
-	ft_memcpy(digest, states, 16);
+	ft_memcpy(digest, states, sizeof(states));
 	free(message);
 	return (digest);
 }
 
-int			md5(const char *str, short opt)
+int			md5(const char *str, t_hash *hashopt)
 {
 	uint32_t	*hash;
 
-	if (!(opt & OPT_S))
+	hashopt->size = 16;
+	hashopt->swap_endian = 1;
+	if (!(hashopt->flags & OPT_S))
 	{
 		if ((hash = hash_file(str, md5_algo)) == NULL)
 			return (EXIT_FAILURE);
 	}
 	else
-	{
 		if ((hash = md5_algo(str)) == NULL)
 			return (EXIT_FAILURE);
-	}
-	display_hash("MD5", hash, str, opt);
+	display_hash("MD5", hash, str, hashopt);
 	return (EXIT_SUCCESS);
 }

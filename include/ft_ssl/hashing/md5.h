@@ -14,7 +14,10 @@
 # define MD5_H
 
 # include <libft.h>
+# include "ft_ssl/hashing.h"
 
-int		md5(const char *str, short opt);
+struct s_hash;
+
+int		md5(const char *str, struct s_hash *hashopt);
 
 #endif

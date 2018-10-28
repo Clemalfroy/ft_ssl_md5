@@ -29,17 +29,19 @@ enum			e_opt
 
 typedef struct	s_hash{
 	uint8_t		flags;
+	uint8_t		swap_endian;
+	uint32_t	size;
 }				t_hash;
 
-typedef int	(*t_algo)(const char *, short);
+typedef int	(*t_algo)(const char *, t_hash *);
 
 typedef uint32_t*(*t_hashalgo)(const char *);
 
 int				hash_parse(int const ac, char const **argv, t_hash *hash,
 					t_algo func);
 int				hasher(int const ac, char const **argv, t_algo func);
-void			display_hash(char const *hash, uint32_t *digest, char const *word,
-					short flags);
+void			display_hash(char const *hash, uint32_t *digest,
+					char const *word, t_hash *hashopt);
 uint32_t		*hash_file(const char *str, t_hashalgo func);
 
 #endif
