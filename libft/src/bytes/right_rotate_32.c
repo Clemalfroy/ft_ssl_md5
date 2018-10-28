@@ -1,24 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft/bytes.h                                      :+:      :+:    :+:   */
+/*   endianness.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cmalfroy <cmalfroy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 09:52:30 by cmalfroy          #+#    #+#             */
-/*   Updated: 2017/11/15 18:23:29 by null             ###   ########.fr       */
+/*   Updated: 2017/12/06 12:00:10 by cmalfroy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BYTES_H
-# define BYTES_H
+#include "libft/bytes.h"
 
-# include "tys.h"
-
-int32_t		ft_get_endianness(void);
-uint64_t	swap_int64(const uint64_t data);
-uint32_t	swap_int32(const uint32_t data);
-uint32_t	left_rotate_32(uint32_t word, uint32_t delta);
-uint32_t	right_rotate_32(uint32_t word, uint32_t delta);
-
-#endif
+uint32_t  right_rotate_32(uint32_t word, uint32_t delta)
+{
+	return ((word >> delta) | (word << ((sizeof(int32_t) * 8) - delta)));
+}
