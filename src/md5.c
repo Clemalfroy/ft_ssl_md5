@@ -47,19 +47,6 @@ static const uint32_t g_constants[64] = {
 #define H(B, C, D) (B) ^ (C) ^ (D)
 #define I(B, C, D) (C) ^ (B | ~(D))
 
-static void	md5_padding(void *block_to_pad, uint8_t *message, uint32_t len)
-{
-	uint64_t	printed_len;
-
-	ft_bzero(block_to_pad, 128);
-	ft_memcpy(block_to_pad, message + len - len % 64, len % 64);
-	*((uint8_t*)block_to_pad + len % 64) |= 0x80;
-	printed_len = len * 8;
-	if (!ft_get_endianness())
-		printed_len = swap_int64(printed_len);
-	((uint64_t*)block_to_pad)[7 + 8 * ((len % 64) > 64 - 9)] = printed_len;
-}
-
 static void	md5_round(uint32_t *bk_states, uint32_t *block)
 {
 	int32_t		i;
@@ -131,7 +118,7 @@ uint32_t	*md5_algo(const char *str)
 	states[B] = 0xefcdab89;
 	states[C] = 0x98badcfe;
 	states[D] = 0x10325476;
-	md5_padding(last_block, message, len);
+	byte_padding(last_block, message, len);
 	md5_loop(states, message, last_block, len);
 	if (!(digest = malloc(sizeof(states))))
 		return (NULL);

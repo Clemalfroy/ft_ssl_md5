@@ -35,18 +35,16 @@ static uint32_t const	g_constants[64] = {
 	0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2
 };
 
-static void	sha256_padding(void *block_to_pad, uint8_t *message, uint32_t len)
-{
-	uint64_t	printed_len;
-
-	ft_bzero(block_to_pad, 128);
-	ft_memcpy(block_to_pad, message + len - len % 64, len % 64);
-	*((uint8_t*)block_to_pad + len % 64) |= 0x80;
-	printed_len = len * 8;
-	if (!ft_get_endianness())
-		printed_len = swap_int64(printed_len);
-	((uint64_t*)block_to_pad)[7 + 8 * ((len % 64) > 64 - 9)] = printed_len;
-}
+/*
+** i[0] = i
+** i[1] = s1
+** i[2] = s0
+** i[3] = ch
+** i[4] = tmp1
+** i[5] = maj
+** i[6] = tmp2
+** `I fucking hate you norm`
+*/
 
 static void	sha256_round(uint32_t *s, uint32_t *msg_schedule)
 {
@@ -99,6 +97,14 @@ static void	init_msg_schedule(uint32_t *array, uint32_t *block)
 	}
 }
 
+/*
+** i[0] = i
+** i[1] = j
+** i[2] = nbr_block
+** i[3] = extra_rounds
+** `I hate you norm`
+*/
+
 static void	sha256_loop(uint32_t *states, uint32_t *message,
 	uint32_t *last_blocks, uint64_t len)
 {
@@ -132,12 +138,12 @@ static void	sha256_loop(uint32_t *states, uint32_t *message,
 uint32_t	*sha256_algo(const char *str)
 {
 	static uint8_t	last_block[128];
-	uint8_t			*message;
+	void			*message;
 	uint32_t		states[8];
 	uint32_t		*digest;
 	size_t			len;
 
-	message = (uint8_t*)ft_strdup(str);
+	message = (uint32_t*)ft_strdup(str);
 	states[A] = 0x6a09e667;
 	states[B] = 0xbb67ae85;
 	states[C] = 0x3c6ef372;
@@ -147,20 +153,23 @@ uint32_t	*sha256_algo(const char *str)
 	states[G] = 0x1f83d9ab;
 	states[H] = 0x5be0cd19;
 	len = ft_strlen(str);
-	sha256_padding(last_block, message, len);
-	sha256_loop(states, (uint32_t *)message, (uint32_t*)last_block, len);
+	byte_padding(last_block, message, len);
+	sha256_loop(states, message, (uint32_t*)last_block, len);
 	if (!(digest = malloc(sizeof(states))))
 		return (NULL);
 	ft_memcpy(digest, states, sizeof(states));
 	return (digest);
 }
 
+#include <stdio.h>
+
 int			sha256(const char *str, t_hash *hashopt)
 {
 	uint32_t *hash;
+	uint32_t i;
 
 	hashopt->size = 32;
-	hashopt->swap_endian = ft_get_endianness() ? 1 : 0;
+	hashopt->swap_endian = 1;
 	if (!(hashopt->flags & OPT_S))
 	{
 		if ((hash = hash_file(str, sha256_algo)) == NULL)
@@ -168,6 +177,9 @@ int			sha256(const char *str, t_hash *hashopt)
 	}
 	else
 		hash = sha256_algo(ft_strdup(str));
+	if (ft_get_endianness() && (i = -1))
+		while (++i < (hashopt->size / 4))
+			hash[i] = swap_int32(hash[i]);
 	display_hash("SHA256", hash, str, hashopt);
 	return (EXIT_SUCCESS);
 }

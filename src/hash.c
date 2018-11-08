@@ -13,15 +13,6 @@
 #include "ft_ssl/hashing.h"
 #include <stdio.h>
 
-int			string_hash(const char *str, t_hash *hash, t_algo func)
-{
-	hash->flags |= OPT_S;
-	if (!func(str, hash))
-		return (0);
-	hash->flags &= ~OPT_S;
-	return (1);
-}
-
 int			hasher(int const ac, char const **argv, t_algo func)
 {
 	t_hash	hash;
@@ -38,7 +29,8 @@ int			hasher(int const ac, char const **argv, t_algo func)
 		ft_read_all(STDIN_FILENO, &input);
 		hash.flags |= OPT_DONE;
 		hash.flags |= OPT_Q;
-		string_hash(input, &hash, func);
+		(hash.flags |= OPT_S) && !func(input, &hash) &&
+		!(hash.flags &= ~OPT_S) ? (void)1 : (void)0;
 		free(input);
 	}
 	hash.flags &= ~OPT_S;
@@ -58,15 +50,16 @@ int			hash_parse(int const ac, char const **argv, t_hash *hash,
 	while ((opt = ft_getopt(ac, argv, "pqrs:")) != -1)
 		if (opt == 'p')
 		{
-			if (!ft_read_all(STDIN_FILENO, &input))
+			if (!ft_read_all(STDIN_FILENO, &input) && (hash->flags |= OPT_P))
 				return (-1);
-			hash->flags |= OPT_P;
-			string_hash(input, hash, func);
+			(hash->flags |= OPT_S) && !func(input, hash) &&
+			!(hash->flags &= ~OPT_S) ? (void)1 : (void)0;
 			hash->flags &= ~OPT_P;
 			free(input);
 		}
 		else if (opt == 's' && (hash->flags |= OPT_DONE))
-			string_hash(g_optarg, hash, func);
+			(hash->flags |= OPT_S) && !func(g_optarg, hash) &&
+			!(hash->flags &= ~OPT_S) ? (void)1 : (void)0;
 		else if (opt == 'q')
 			hash->flags |= OPT_Q;
 		else if (opt == 'r')
@@ -76,7 +69,7 @@ int			hash_parse(int const ac, char const **argv, t_hash *hash,
 	return (g_optind);
 }
 
-void		print_digest(uint32_t *digest, t_hash *hashopt)
+static void	print_digest(uint32_t *digest, t_hash *hashopt)
 {
 	uint32_t	i;
 	uint32_t	tmp;
