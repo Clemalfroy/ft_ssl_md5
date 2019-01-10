@@ -1,25 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   libft/bytes.h                                      :+:      :+:    :+:   */
+/*   byte_padding.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: cmalfroy <cmalfroy@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2017/11/07 09:52:30 by cmalfroy          #+#    #+#             */
-/*   Updated: 2017/11/15 18:23:29 by null             ###   ########.fr       */
+/*   Updated: 2017/12/06 12:00:10 by cmalfroy         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef BYTES_H
-# define BYTES_H
+#include "libft.h"
 
-# include "tys.h"
+void	byte_padding(void *block_to_pad, uint8_t *message, uint32_t len)
+{
+	uint64_t	printed_len;
 
-int32_t		ft_get_endianness(void);
-uint64_t	swap_int64(const uint64_t data);
-uint32_t	swap_int32(const uint32_t data);
-uint32_t	left_rotate_32(uint32_t word, uint32_t delta);
-uint32_t	right_rotate_32(uint32_t word, uint32_t delta);
-void		byte_padding(void *block_to_pad, uint8_t *message, uint32_t len);
-
-#endif
+	ft_bzero(block_to_pad, 128);
+	ft_memcpy(block_to_pad, message + len - len % 64, len % 64);
+	*((uint8_t*)block_to_pad + len % 64) |= 0x80;
+	printed_len = len * 8;
+	if (!ft_get_endianness())
+		printed_len = swap_int64(printed_len);
+	((uint64_t*)block_to_pad)[7 + 8 * ((len % 64) > 64 - 9)] = printed_len;
+}

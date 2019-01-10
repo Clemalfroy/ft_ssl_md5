@@ -66,7 +66,7 @@ SRC_NAME = \
 	str/mem.c str/mem_2.c str/str.c str/str_2.c str/str_3.c str/str_4.c \
 	str/str_5.c str/str_6.c str/str_7.c \
 	bytes/endianness.c bytes/swap_int64.c bytes/left_rotate_32.c \
-	bytes/swap_int32.c bytes/right_rotate_32.c \
+	bytes/swap_int32.c bytes/right_rotate_32.c  bytes/byte_padding.c\
 	getopt.c \
 	sort/ft_shellsort.c
 
