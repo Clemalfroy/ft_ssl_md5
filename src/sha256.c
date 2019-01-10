@@ -106,7 +106,7 @@ static void	init_msg_schedule(uint32_t *array, uint32_t *block)
 */
 
 static void	sha256_loop(uint32_t *states, uint32_t *message,
-	uint32_t *last_blocks, uint64_t len)
+	uint32_t *last_blocks, size_t len)
 {
 	uint32_t		block_states[8];
 	static uint32_t	msg_schedule[64];
